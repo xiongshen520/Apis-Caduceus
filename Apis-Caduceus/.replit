@@ -1,0 +1,53 @@
+modules = ["nodejs-20"]
+
+[deployment]
+deploymentTarget = "gce"
+run = ["sh", "-c", "pnpm install && pnpm --filter @workspace/apis-caduceus-api run build && pnpm --filter @workspace/apis-caduceus-api run start"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "API"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Panel"
+
+[[workflows.workflow]]
+name = "API"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm install && pnpm --filter @workspace/apis-caduceus-api run build && pnpm --filter @workspace/apis-caduceus-api run start"
+waitForPort = 8082
+
+[[workflows.workflow]]
+name = "Panel"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=3001 pnpm --filter @workspace/apis-caduceus-panel run dev"
+waitForPort = 3001
+
+[[ports]]
+localPort = 8082
+externalPort = 80
+
+[[ports]]
+localPort = 3001
+externalPort = 3001

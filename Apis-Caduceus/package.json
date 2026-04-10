@@ -1,0 +1,8 @@
+{
+  "name": "apis-caduceus",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "sh -c 'case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm\" >&2; exit 1 ;; esac'"
+  }
+}
